@@ -1,0 +1,10 @@
+(jbuild_version 1)
+
+(alias
+ ((name    runtest)
+  (deps    (migemocaml_test.exe))
+  (action  (run ${<}))))
+
+(executable
+ ((name migemocaml_test)
+  (libraries (migemocaml oUnit))))
