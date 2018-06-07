@@ -7,4 +7,5 @@
 
 (executable
  ((name migemocaml_test)
+  (flags (-safe-string))
   (libraries (migemocaml oUnit))))
