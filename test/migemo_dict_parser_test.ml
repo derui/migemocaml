@@ -36,4 +36,12 @@ let suite =
        let dict = Parser.dict Lexer.token (Lexing.from_string content) in
        assert_equal [("わーど", ["ワード"]);("ふくすう", ["複数";"副数"])] dict
      );
+   "should allow to contain white space in word" >:: (fun _ ->
+       let content = {|
+simpleword	simple word
+|}
+       in
+       let dict = Parser.dict Lexer.token (Lexing.from_string content) in
+       assert_equal [("simpleword", ["simple word"]);] dict
+     );
   ]
