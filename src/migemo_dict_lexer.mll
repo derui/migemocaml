@@ -4,8 +4,8 @@
 }
 
 rule token = parse
-  | [' ' '\n']+ {
-      token lexbuf
+  | ['\n']+ {
+      Lexing.new_line lexbuf;token lexbuf
     }
   | [';'] {
       line_comment lexbuf; token lexbuf
@@ -13,7 +13,7 @@ rule token = parse
   | ['\t'] {
       Migemo_dict_parser.SEPARATOR
     }
-  | [^ '\t' ';' '\n' ' ']+ { (* This means 'any byte' *)
+  | [^ '\t' ';' '\n']+ { (* This means 'any byte' *)
       Migemo_dict_parser.WORD (Lexing.lexeme lexbuf)
     }
   | eof {
@@ -21,5 +21,6 @@ rule token = parse
     }
 
 and line_comment = parse
-  | ('\n' | eof) { () }
+  | '\n' { Lexing.new_line lexbuf }
+  | eof { () }
   | _ { line_comment lexbuf }
