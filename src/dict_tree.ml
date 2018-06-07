@@ -1,12 +1,18 @@
 (** Word_tree module provides tree structure for migemo dictionary. *)
 
-type word_list = bytes list
+type word_list = string list
 
 (** [node] has a character in the word, and multibyte-word mapped in dictionary *)
-type node = {
-  char: char;
-  word_list: word_list;
-}
+module Node = struct
+  type t = {
+    char: char;
+    word_list: word_list;
+  }
+
+  let to_string t = Printf.sprintf "[%c;%s]" t.char (String.concat "," t.word_list)
+end
+
+type node = Node.t
 
 (** [t] is a type represented character-base tree.
     This tree have nodes and leaf. [Leaf] is the last character of the word and
@@ -14,37 +20,49 @@ type node = {
     [Node] is as Leaf, but has children if dictionary contains word including [Node]'s character.
 *)
 type t =
-  | Leaf of node
-  | Node of node * t list
+  | Nil
+  (* node is data of Node. first t is sibling node, and second t is child node. *)
+  | Node of node * t * t
 
-type tree = t list
+let rec to_string = function
+  | Nil -> "()"
+  | Node (v, sib, child) -> Printf.sprintf "(%s\n  %s\n  %s\n)\n"
+                              (Node.to_string v)
+                              (to_string sib)
+                              (to_string child)
 
-(** Search a node that has specified character [ch]. Return option to be found or not *)
-let rec find_node ch = function
-  | Leaf v as t -> if v.char = ch then Some t else None
-  | Node (v, rest) as t ->
-    if v.char = ch then Some t
-    else List.find_opt (fun node -> find_node ch node <> None) rest
-
-let list_to_tree list =
-  let rec construct_tree tree dicts buf words =
-    if Bytes.length buf <= 1 then
+(** Make a tree from list of dict *)
+let make_tree list =
+  let rec construct_tree tree buf words =
+    if String.length buf = 0 then tree
+    else if String.length buf = 1 then
       match tree with
-      | Leaf v -> Leaf {v with word_list = List.append v.word_list words}
-      | Node (v, tree) -> Node ({v with word_list = List.append v.word_list words}, tree)
+      | Nil -> Node ({char = String.get buf 0; word_list = words}, Nil, Nil)
+      | Node (v, sib, child) ->
+        if v.char = String.get buf 0 then
+          Node ({v with word_list = v.word_list @ words}, sib, child)
+        else
+          Node (v, construct_tree sib buf words, child)
     else begin
-      let ch = Bytes.get buf 0 in
-      match find_node ch tree with
-      | None -> Leaf {char = ch; word_list = words}
-      | Some (Leaf _ as v) -> construct_tree v dicts Bytes.(sub buf 1 @@ length buf - 1) words
-      | Some (Node _ as v) -> construct_tree v dicts Bytes.(sub buf 1 @@ length buf - 1) words
-
+      let ch = String.get buf 0 in
+      match tree with
+      | Nil -> let tree = Node ({char = ch; word_list = []}, Nil, Nil) in
+        construct_tree tree buf words
+      | Node (v, sib, child) ->
+        if v.char = ch then
+          let child = construct_tree child String.(sub buf 1 @@ length buf - 1) words in
+          Node (v, sib, child)
+        else
+          let sib = construct_tree sib buf words in
+          Node (v, sib, child)
+    end
+  in
+  List.fold_left (fun tree (buf, words) -> construct_tree tree buf words) Nil list
 
 let parse_dict ic =
   let module P = Migemo_dict_parser in
   let module L = Migemo_dict_lexer in
-  let dict = P.dict L.token Lexing.(from_channel ic) in
-  list_to_tree dict
+  P.dict L.token Lexing.(from_channel ic)
 
 let with_open ~f filename =
   let ic = open_in filename in
@@ -62,6 +80,6 @@ let with_open ~f filename =
 let load filename =
   if not @@ Sys.file_exists filename then None
   else begin
-    let dict = with_open ~parse_dict filename in
-    Some dict
+    let dict = with_open ~f:parse_dict filename in
+    Some (make_tree dict)
   end
