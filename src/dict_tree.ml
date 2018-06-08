@@ -3,7 +3,7 @@
 type word_list = string list
 
 (** [node] has a character in the word, and multibyte-word mapped in dictionary *)
-module Node = struct
+module Attr = struct
   type t = {
     char: char;
     word_list: word_list;
@@ -12,7 +12,7 @@ module Node = struct
   let to_string t = Printf.sprintf "[%c;%s]" t.char (String.concat "," t.word_list)
 end
 
-type node = Node.t
+type node = Attr.t
 
 (** [t] is a type represented character-base tree.
     This tree have nodes and leaf. [Leaf] is the last character of the word and
@@ -27,7 +27,7 @@ type t =
 let rec to_string = function
   | Nil -> "()"
   | Node (v, sib, child) -> Printf.sprintf "(%s\n  %s\n  %s\n)\n"
-                              (Node.to_string v)
+                              (Attr.to_string v)
                               (to_string sib)
                               (to_string child)
 
@@ -37,19 +37,19 @@ let make_tree list =
     if String.length buf = 0 then tree
     else if String.length buf = 1 then
       match tree with
-      | Nil -> Node ({char = String.get buf 0; word_list = words}, Nil, Nil)
+      | Nil -> Node ({Attr.char = String.get buf 0; word_list = words}, Nil, Nil)
       | Node (v, sib, child) ->
-        if v.char = String.get buf 0 then
-          Node ({v with word_list = v.word_list @ words}, sib, child)
+        if v.Attr.char = String.get buf 0 then
+          Node ({v with Attr.word_list = v.word_list @ words}, sib, child)
         else
           Node (v, construct_tree sib buf words, child)
     else begin
       let ch = String.get buf 0 in
       match tree with
-      | Nil -> let tree = Node ({char = ch; word_list = []}, Nil, Nil) in
+      | Nil -> let tree = Node ({Attr.char = ch; word_list = []}, Nil, Nil) in
         construct_tree tree buf words
       | Node (v, sib, child) ->
-        if v.char = ch then
+        if v.Attr.char = ch then
           let child = construct_tree child String.(sub buf 1 @@ length buf - 1) words in
           Node (v, sib, child)
         else
@@ -58,6 +58,35 @@ let make_tree list =
     end
   in
   List.fold_left (fun tree (buf, words) -> construct_tree tree buf words) Nil list
+
+(** Send [query] to find longest matching content in [tree]. *)
+let query ~query tree =
+  let rec inner_query query tree =
+    if String.length query = 0 then None
+    else match tree with
+      | Nil -> None
+      | Node (v, sib, child) as t ->
+        if String.get query 0 = v.Attr.char then
+          if String.length query = 1 then Some t
+          else inner_query Util.(snd @@ take query) child
+        else inner_query query sib
+  in
+  inner_query query tree
+
+(** Send [query] to find node in [tree] longest forward exact matched [query]. *)
+let forward_match ~query tree =
+  let rec inner_match query tree length =
+    if String.length query = 0 then None
+    else match tree with
+      | Nil -> None
+      | Node (v, sib, child) as t ->
+        if String.get query 0 = v.Attr.char then
+          match inner_match Util.(snd @@ take query) child (succ length) with
+          | None -> Some (t, length)
+          | Some _ as v -> v
+        else inner_match query sib length
+  in
+  inner_match query tree 1
 
 let parse_dict ic =
   let module P = Migemo_dict_parser in
