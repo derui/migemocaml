@@ -19,9 +19,9 @@ let suite =
      );
    "should return empty list if contents only have line comments" >:: (fun _ ->
        let content = {|
-;
-;normal comment
-;日本語コメント
+#
+#normal comment
+#日本語コメント
 |}
        in
        let dict = Parser.dict Lexer.token (Lexing.from_string content) in
