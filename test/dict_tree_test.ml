@@ -84,9 +84,7 @@ let suite =
        let dict = [("b", ["word"]);
                    ("bc", ["next_word"])] in
        let tree = make_tree dict in
-       let expect = Some (Node ({Attr.char = 'b'; word_list = ["word"]},
-                                Nil,
-                               Node ({Attr.char = 'c'; word_list = ["next_word"]}, Nil, Nil)), 1) in
+       let expect = Some (["word"], 1) in
        assert_equal expect @@ forward_match ~query:"ba" tree
      );
 
@@ -95,7 +93,7 @@ let suite =
        let dict = [("b", ["word"]);
                    ("bc", ["next_word"])] in
        let tree = make_tree dict in
-       let expect = Some (Node ({Attr.char = 'c'; word_list = ["next_word"]}, Nil, Nil), 2) in
+       let expect = Some (["next_word"], 2) in
        assert_equal expect @@ forward_match ~query:"bca" tree
      );
   ]

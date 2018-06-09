@@ -82,7 +82,7 @@ let forward_match ~query tree =
       | Node (v, sib, child) as t ->
         if String.get query 0 = v.Attr.char then
           match inner_match Util.(snd @@ take query) child (succ length) with
-          | None -> Some (t, length)
+          | None -> Some (v.Attr.word_list, length)
           | Some _ as v -> v
         else inner_match query sib length
   in
