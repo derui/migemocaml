@@ -5,6 +5,7 @@ let suite = "Migemocaml" >::: [
     Migemo_dict_parser_test.suite;
     Dict_tree_test.suite;
     Converter_romaji_test.suite;
+    Converter_character_test.suite;
   ]
 
 let () =
