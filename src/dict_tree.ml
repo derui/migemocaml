@@ -79,7 +79,7 @@ let forward_match ~query tree =
     if String.length query = 0 then None
     else match tree with
       | Nil -> None
-      | Node (v, sib, child) as t ->
+      | Node (v, sib, child) ->
         if String.get query 0 = v.Attr.char then
           match inner_match Util.(snd @@ take query) child (succ length) with
           | None -> Some (v.Attr.word_list, length)
