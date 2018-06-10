@@ -1,0 +1,62 @@
+open OUnit2
+
+open Migemocaml.Regexp_gen
+
+let suite =
+  "Regular expression generator" >:::
+  ["should return empty tree if word is empty" >:: (fun _ ->
+       assert_equal Nil @@ add_word ~word:"" empty
+     );
+   "add sequence of tree having word if the word not contains" >:: (fun _ ->
+       let expect = Node (Int64.of_int @@ Char.code 'a', Nil,
+                          Node (Int64.of_int @@ Char.code 'b', Nil,
+                               Node (0x3042L, Nil, Nil))) in
+       assert_equal expect @@ add_word ~word:"abあ" empty
+     );
+   "add sequence of tree having word if the word is same partially added before " >:: (fun _ ->
+       let expect = Node (Int64.of_int @@ Char.code 'a', Nil,
+                          Node (Int64.of_int @@ Char.code 'b',
+                                Nil,
+                                Node (0x3042L, Node (0x3044L, Nil, Nil), Nil))) in
+       let tree = add_word ~word:"abあ" empty in
+       assert_equal expect @@ add_word ~word:"abい" tree
+     );
+   "should ignore long sequence if already added partially" >:: (fun _ ->
+       let expect = Node (Int64.of_int @@ Char.code 'a', Nil,
+                          Node (Int64.of_int @@ Char.code 'b',
+                                Nil,
+                                Node (0x3042L, Nil, Nil))) in
+       let tree = add_word ~word:"abあ" empty in
+       assert_equal expect @@ add_word ~word:"abあい" tree
+     );
+   "should delete previous sequence if the word is shorter than added before" >:: (fun _ ->
+       let expect = Node (Int64.of_int @@ Char.code 'a', Nil,
+                          Node (Int64.of_int @@ Char.code 'b',
+                                Nil,
+                                Nil)) in
+       let tree = add_word ~word:"abあ" empty in
+       assert_equal expect @@ add_word ~word:"ab" tree
+     );
+   "should generate empty rule from empty tree" >:: (fun _ ->
+       assert_equal "" @@ generate empty
+     );
+   "should generate rule to match single character if add word having only a character" >:: (fun _ ->
+       let tree = add_word ~word:"a" empty in
+       assert_equal "a" @@ generate tree
+     );
+   "should be able to generate rule to match each words that do not cover character" >:: (fun _ ->
+       let tree = add_word ~word:"ab" empty in
+       let tree = add_word ~word:"ca" tree in
+       assert_equal "ab|ca" @@ generate tree
+     );
+   "should be able to generate rule to match sibling word do not have child" >:: (fun _ ->
+       let tree = add_word ~word:"ab" empty in
+       let tree = add_word ~word:"ac" tree in
+       assert_equal "a[bc]" @@ generate tree
+     );
+   "should be able to generate rule with multi-byte characters" >:: (fun _ ->
+       let tree = add_word ~word:"あかい" empty in
+       let tree = add_word ~word:"あかるい" tree in
+       assert_equal "あか(い|るい)" @@ generate tree
+     );
+  ]

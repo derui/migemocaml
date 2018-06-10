@@ -6,6 +6,7 @@ let suite = "Migemocaml" >::: [
     Dict_tree_test.suite;
     Converter_romaji_test.suite;
     Converter_character_test.suite;
+    Regexp_gen_test.suite;
   ]
 
 let () =
