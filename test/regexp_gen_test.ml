@@ -42,21 +42,26 @@ let suite =
      );
    "should generate rule to match single character if add word having only a character" >:: (fun _ ->
        let tree = add_word ~word:"a" empty in
-       assert_equal "a" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "a" @@ generate tree
      );
    "should be able to generate rule to match each words that do not cover character" >:: (fun _ ->
        let tree = add_word ~word:"ab" empty in
        let tree = add_word ~word:"ca" tree in
-       assert_equal "ab|ca" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "(ab|ca)" @@ generate tree
      );
    "should be able to generate rule to match sibling word do not have child" >:: (fun _ ->
        let tree = add_word ~word:"ab" empty in
        let tree = add_word ~word:"ac" tree in
-       assert_equal "a[bc]" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "a[bc]" @@ generate tree
      );
    "should be able to generate rule with multi-byte characters" >:: (fun _ ->
        let tree = add_word ~word:"あかい" empty in
        let tree = add_word ~word:"あかるい" tree in
-       assert_equal "あか(い|るい)" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "あかい|るい" @@ generate tree
+     );
+   "should be able to generate nested rule" >:: (fun _ ->
+       let tree = add_word ~word:"Iueo" empty in
+       let tree = add_word ~word:"いうえお" tree in
+       assert_equal ~printer:(fun v -> v) "(Iueo|いうえお)" @@ generate tree
      );
   ]

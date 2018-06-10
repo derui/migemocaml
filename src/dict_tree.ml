@@ -88,6 +88,17 @@ let forward_match ~query tree =
   in
   inner_match query tree 1
 
+(** Traverse tree as depth priority. *)
+let traverse ~f tree =
+  let rec inner_traverse ~f = function
+    | Nil -> ()
+    | Node (v, sib, child) ->
+      inner_traverse ~f child;
+      f v;
+      inner_traverse ~f sib
+  in
+  inner_traverse ~f tree
+
 let parse_dict ic =
   let module P = Migemo_dict_parser in
   let module L = Migemo_dict_lexer in

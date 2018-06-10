@@ -109,10 +109,14 @@ let generate t =
       ) [] list
     in
     let rule_for_having_child = String.concat operator_or rules_for_having_child in
-    match (rule_for_not_having_child, rule_for_having_child) with
-    | ("", "") -> ""
-    | ("", v) -> v
-    | (v, "") -> v
-    | (sib_rule, child_rule) -> operator_nest_in ^ sib_rule ^ operator_or ^ child_rule ^ operator_nest_out
+    let rule = match (rule_for_not_having_child, rule_for_having_child) with
+      | ("", "") -> ""
+      | ("", v) -> v
+      | (v, "") -> v
+      | (sib_rule, child_rule) -> sib_rule ^ operator_or ^ child_rule
+    in
+    if List.length list > 1 && has_child t then
+      operator_nest_in ^ rule ^ operator_nest_out
+    else rule
   in
   inner_generate t
