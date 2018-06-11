@@ -2,7 +2,9 @@
 
 (menhir
  ((modules (migemo_dict_parser))))
-(ocamllex (migemo_dict_lexer))
+(menhir
+ ((modules (migemo_conv_parser))))
+(ocamllex (migemo_dict_lexer migemo_conv_lexer))
 
 (library
  ((name migemocaml)

@@ -7,10 +7,7 @@ rule token = parse
   | ['\n']+ {
       Lexing.new_line lexbuf;token lexbuf
     }
-  | ['#'] {
-      line_comment lexbuf; token lexbuf
-    }
-  | ['\t'] {
+  | '\t'+ {
       Migemo_dict_parser.SEPARATOR
     }
   | [^ '\t' '#' '\n']+ { (* This means 'any byte' *)

@@ -104,6 +104,11 @@ let parse_dict ic =
   let module L = Migemo_dict_lexer in
   P.dict L.token Lexing.(from_channel ic)
 
+let parse_conv ic =
+  let module P = Migemo_conv_parser in
+  let module L = Migemo_conv_lexer in
+  P.dict L.token Lexing.(from_channel ic)
+
 let with_open ~f filename =
   let ic = open_in filename in
   let ret = begin
@@ -121,5 +126,13 @@ let load filename =
   if not @@ Sys.file_exists filename then None
   else begin
     let dict = with_open ~f:parse_dict filename in
+    Some (make_tree dict)
+  end
+
+(** Load tree from file as conversion file. *)
+let load_conv filename =
+  if not @@ Sys.file_exists filename then None
+  else begin
+    let dict = with_open ~f:parse_conv filename in
     Some (make_tree dict)
   end
