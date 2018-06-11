@@ -10,7 +10,7 @@ let suite =
      );
    "should return single node if label has only one byte" >:: (fun _ ->
        let open T in
-       let expect = Node ({char = 'b'; word_list = ["word"]}, Nil, Nil) in
+       let expect = Node ({Attr.char = 'b'; word_list = ["word"]}, Nil, Nil) in
        assert_equal expect @@ T.make_tree [("b", ["word"])]
      );
    "should have sibling node when dict contains difference prefix labels" >:: (fun _ ->
