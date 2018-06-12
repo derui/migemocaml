@@ -35,14 +35,6 @@ let rec to_string = function
 let make_tree list =
   let rec construct_tree tree buf words =
     if String.length buf = 0 then tree
-    else if String.length buf = 1 then
-      match tree with
-      | Nil -> Node ({Attr.char = String.get buf 0; word_list = words}, Nil, Nil)
-      | Node (v, sib, child) ->
-        if v.Attr.char = String.get buf 0 then
-          Node ({v with Attr.word_list = v.word_list @ words}, sib, child)
-        else
-          Node (v, construct_tree sib buf words, child)
     else begin
       let ch = String.get buf 0 in
       match tree with
@@ -50,8 +42,12 @@ let make_tree list =
         construct_tree tree buf words
       | Node (v, sib, child) ->
         if v.Attr.char = ch then
-          let child = construct_tree child String.(sub buf 1 @@ length buf - 1) words in
-          Node (v, sib, child)
+          if String.length buf = 1 then
+            Node ({v with Attr.word_list = v.word_list @ words}, sib, child)
+          else
+            let _, rest = Util.take ~size:1 buf in
+            let child = construct_tree child rest words in
+            Node (v, sib, child)
         else
           let sib = construct_tree sib buf words in
           Node (v, sib, child)

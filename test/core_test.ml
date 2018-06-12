@@ -38,11 +38,11 @@ let suite =
       );
     "return converted regexp with dict word" >:: (fun _ ->
         let t = make ~dict:(D.make_tree [("あ", ["亜"; "合"])]) () in
-        assert_equal ~printer:(fun id -> id) "[あ亜合]" @@ query ~query:"あ" t
+        assert_equal ~printer:(fun id -> id) "[合亜あ]" @@ query ~query:"あ" t
       );
     "return converted regexp with romaji conversion" >:: (fun _ ->
         let t = make ~dict:(D.make_tree [("あ", ["亜"; "合"])])
             ~romaji_to_hira:(D.make_tree Dicts.romaji_dict) () in
-        assert_equal ~printer:(fun id -> id) "[aあ亜合](Iueo|いうえお)" @@ query ~query:"aIueo" t
+        assert_equal ~printer:(fun id -> id) "[合亜あa](いうえお|Iueo)" @@ query ~query:"aIueo" t
       );
   ]

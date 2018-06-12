@@ -107,13 +107,17 @@ let query_a_word word t =
       let converted = Converter_character.convert ~string:lower han_to_zen in
       gen := Regexp_gen.add_word ~word:converted !gen
   end;
+  (* Sequence to add words: original -> words what querying with original ->
+     hiragana -> words what querying with hiragana ->
+     katakana -> words what querying with katakana
+  *)
   with_dict t.romaji_to_hira ~f:(fun romaji_to_hira ->
       let hiragana = Converter_romaji.convert ~string:lower romaji_to_hira in
       gen := Regexp_gen.add_word ~word:hiragana !gen;
       add_word_list_to_gen hiragana t.dict gen;
 
       with_dict t.hira_to_kata ~f:(fun hira_to_kata ->
-          let katakana = Converter_romaji.convert ~string:hiragana romaji_to_hira in
+          let katakana = Converter_romaji.convert ~string:hiragana hira_to_kata in
           gen := Regexp_gen.add_word ~word:katakana !gen;
           add_word_list_to_gen katakana t.dict gen;
         )

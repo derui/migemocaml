@@ -47,21 +47,29 @@ let suite =
    "should be able to generate rule to match each words that do not cover character" >:: (fun _ ->
        let tree = add_word ~word:"ab" empty in
        let tree = add_word ~word:"ca" tree in
-       assert_equal ~printer:(fun v -> v) "(ab|ca)" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "(ca|ab)" @@ generate tree
      );
    "should be able to generate rule to match sibling word do not have child" >:: (fun _ ->
        let tree = add_word ~word:"ab" empty in
        let tree = add_word ~word:"ac" tree in
-       assert_equal ~printer:(fun v -> v) "a[bc]" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "a[cb]" @@ generate tree
+     );
+   "should be able to generate rule to match nesting words" >:: (fun _ ->
+       let tree = add_word ~word:"Es" empty in
+       let tree = add_word ~word:"Einstenium" tree in
+       assert_equal ~printer:(fun v -> v) "E(s|instenium)" @@ generate tree
      );
    "should be able to generate rule with multi-byte characters" >:: (fun _ ->
-       let tree = add_word ~word:"あかい" empty in
-       let tree = add_word ~word:"あかるい" tree in
-       assert_equal ~printer:(fun v -> v) "あかい|るい" @@ generate tree
+       let tree = add_word ~word:"アイ" empty in
+       let tree = add_word ~word:"アーイシャ" tree in
+       let tree = add_word ~word:"アイーシャ" tree in
+       let tree = add_word ~word:"アイコン化" tree in
+       let tree = add_word ~word:"アイロン台" tree in
+       assert_equal ~printer:(fun v -> v) "ア(イ|ーイシャ)" @@ generate tree
      );
    "should be able to generate nested rule" >:: (fun _ ->
        let tree = add_word ~word:"Iueo" empty in
        let tree = add_word ~word:"いうえお" tree in
-       assert_equal ~printer:(fun v -> v) "(Iueo|いうえお)" @@ generate tree
+       assert_equal ~printer:(fun v -> v) "(いうえお|Iueo)" @@ generate tree
      );
   ]
