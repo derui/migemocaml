@@ -97,7 +97,11 @@ let traverse ~f tree =
       f v;
       inner_traverse ~f sib
   in
-  inner_traverse ~f tree
+  match tree with
+  | Nil -> ()
+  | Node (v, _, child) ->
+    f v;
+    inner_traverse ~f child
 
 let parse_dict ic =
   let module P = Migemo_dict_parser in
