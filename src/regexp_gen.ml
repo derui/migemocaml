@@ -30,25 +30,30 @@ let to_string t =
 
 (** Add [word] to engine [t]. This function is immutable. *)
 let add_word ~word t =
-  let module C = Charset.Utf8 in
-  let rec construct_tree buf t =
+  let rec construct_tree char_list t =
     (* Drop child pattern that is longer than the [buf]. *)
-    if String.length buf = 0 then Nil
-    else begin
-      match C.raw_to_character buf with
-      | None -> t
-      | Some (code, skip) -> begin
-          let buf' = snd @@ Util.take ~size:skip buf in
-          match t with
-          | Nil -> Node (code, Nil, construct_tree buf' Nil)
-          | Node (code', _, Nil) as t when code' = code -> t
-          | Node (code', sib, child) ->
-            if code' = code then Node (code', sib, construct_tree buf' child)
-            else Node (code', construct_tree buf sib, child)
-        end
+    match char_list with
+    | [] -> Nil
+    | code :: rest -> begin
+        match t with
+        | Nil -> Node (code, Nil, construct_tree rest Nil)
+        | Node (code', _, Nil) as t when code' = code -> t
+        | Node (code', sib, child) ->
+          if code' = code
+          then Node (code', sib, construct_tree rest child)
+          else Node (code', construct_tree char_list sib, child)
     end
   in
-  construct_tree word t
+  let module C = Charset.Utf8 in
+  let rec buf_to_code_list buf accum =
+    match C.raw_to_character buf with
+    | None -> List.rev accum
+    | Some (code, skip) ->
+      let buf' = snd @@ Util.take ~size:skip buf in
+      buf_to_code_list buf' (code :: accum)
+  in
+
+  construct_tree (buf_to_code_list word []) t
 
 (** Get empty tree *)
 let empty = Nil
