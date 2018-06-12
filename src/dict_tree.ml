@@ -1,4 +1,4 @@
-(** Word_tree module provides tree structure for migemo dictionary. *)
+(** Dict_tree module provides tree structure for migemo dictionary. *)
 
 type word_list = string list
 
@@ -122,7 +122,7 @@ let with_open ~f filename =
   ret
 
 (** Load tree from file. *)
-let load filename =
+let load_dict filename =
   if not @@ Sys.file_exists filename then None
   else begin
     let dict = with_open ~f:parse_dict filename in
