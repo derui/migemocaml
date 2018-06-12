@@ -16,11 +16,16 @@ module Utf8 : Converter = struct
   (* helper function to construct UTF-8's non-ascii character. Return [None] if
    * first byte contains range of ascii character. *)
   let raw_to_character_for_noascii string =
-    let rec detect_utf8_char_size byte size =
-      if byte land 0x80 = 0 then size
-      else detect_utf8_char_size (byte lsl 1) (succ size)
+    (* this function support only up to 4-byte characters in UTF-8 *)
+    let detect_utf8_char_size byte =
+      let utf8_char_size = byte land 0xF0 in
+      match utf8_char_size with
+      | 0xC0 -> 2
+      | 0xE0 -> 3
+      | 0xF0 -> 4
+      | _ -> 1
     in
-    let size = detect_utf8_char_size Char.(code @@ String.get string 0) 0 in
+    let size = detect_utf8_char_size Char.(code @@ String.get string 0) in
 
     (* concat byte sequence as utf-8 non-ascii character. *)
     let rec combine_string_to_character string size offset ch =
