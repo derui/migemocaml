@@ -7,7 +7,7 @@ let suite = "Migemocaml" >::: [
     Converter_romaji_test.suite;
     Converter_character_test.suite;
     Regexp_gen_test.suite;
-    Core_test.suite;
+    Migemo_test.suite;
     Migemo_conv_parser_test.suite;
   ]
 
