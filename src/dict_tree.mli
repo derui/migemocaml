@@ -26,7 +26,7 @@ val query : query:string -> t -> t option
 val forward_match : query:string -> t -> (word_list * int) option
 
 (** Tree traverses depth-proirity *)
-val traverse : f:(node -> 'a) -> t -> unit
+val traverse : f:(node -> unit) -> t -> unit
 
 (** Load the file as dictionary *)
 val load_dict : string -> t option

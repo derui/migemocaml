@@ -9,11 +9,11 @@ bug-reports: "https://github.com/derui/migemocaml"
 dev-repo: "git+https://github.com/derui/migemocaml"
 tags: []
 build: [
-  ["jbuilder" "build" "-p" name "-j" jobs]
-  ["jbuilder" "runtest" "-p" name] {test}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name] {test}
 ]
 depends: [
-  "jbuilder" {build & >= "1.0+beta16"}
+  "dune" {build & >= "1.0.0"}
   "menhir" {build}
   "oUnit" {test}
 ]

@@ -58,12 +58,6 @@ let add_word ~word t =
 (** Get empty tree *)
 let empty = Nil
 
-(** Get current layer having sibling *)
-let has_siblings = function
-  | Nil -> false
-  | Node (_, Nil, _) -> false
-  | Node (_, Node _, _) -> true
-
 let has_child = function
   | Nil -> false
   | Node (_, _, Nil) -> false
@@ -73,12 +67,12 @@ let has_child = function
 let rec has_children = function
   | Nil -> false
   | Node (_, sib, Nil) -> has_children sib
-  | Node (_, sib, Node _) -> true
+  | Node (_, _, Node _) -> true
 
 let to_sibling_list t =
   let rec inner_sibling_list accum = function
     | Nil -> List.rev accum
-    | Node (code, sib, _) as t -> inner_sibling_list (t :: accum) sib
+    | Node (_, sib, _) as t -> inner_sibling_list (t :: accum) sib
   in
   inner_sibling_list [] t
 
