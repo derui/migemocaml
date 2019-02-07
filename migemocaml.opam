@@ -7,14 +7,15 @@ license: "MIT"
 homepage: "https://github.com/derui/migemocaml"
 bug-reports: "https://github.com/derui/migemocaml"
 dev-repo: "git+https://github.com/derui/migemocaml"
+synopsis: "Migemo implementation for OCamhl"
 tags: []
 build: [
   ["dune" "build" "-p" name "-j" jobs]
-  ["dune" "runtest" "-p" name] {test}
+  ["dune" "runtest" "-p" name] {with-test}
 ]
 depends: [
   "dune" {build & >= "1.0.0"}
   "menhir" {build}
-  "oUnit" {test}
+  "oUnit" {with-test}
 ]
 available: ["ocaml" >= "4.05.0"]
