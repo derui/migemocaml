@@ -58,4 +58,8 @@ let suite =
        let tree = add_word ~word:"いうえお" tree in
        assert_equal ~printer:(fun v -> v) "(いうえお|Iueo)" @@ generate tree
      );
+   "should be escape special characters of regular expression" >:: (fun _ ->
+       let tree = add_word ~word:"++" empty in
+       assert_equal ~printer:(fun v -> v) "\\+\\+" @@ generate tree
+     );
   ]

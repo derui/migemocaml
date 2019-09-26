@@ -14,6 +14,15 @@ let operator_nest_in = "("
 let operator_nest_out = ")"
 let operator_or = "|"
 
+let escape_word word =
+  let rec escape' index buf word =
+    if index >= String.length word then Buffer.contents buf
+    else match word.[index] with
+      | '+' as c -> Buffer.add_string buf (Printf.sprintf "\\%c" c); escape' (succ index) buf word
+      | _ as c -> Buffer.add_char buf c; escape' (succ index) buf word
+  in
+  escape' 0 (Buffer.create @@ String.length word) word
+
 (* Get string representation of [t] *)
 let to_string t =
   let rec to_string' nest = function
@@ -88,8 +97,9 @@ let generate t =
         else rules
       ) [] list
     in
-    if List.length rules > 1 then operator_select_in ^ String.concat "" rules ^ operator_select_out
-    else String.concat "" rules
+    let rule = String.concat "" rules |> escape_word in
+    if List.length rules > 1 then operator_select_in ^ rule ^ operator_select_out
+    else rule
   in
 
   (* Generate regexp from nodes have child and not child. *)
@@ -102,7 +112,7 @@ let generate t =
           match node with
           | Nil -> failwith "this branch should unreach"
           | Node (code, _, child) ->
-            let rule = Charset.Utf8.character_to_raw code ^ inner_generate child in
+            let rule = (escape_word @@ Charset.Utf8.character_to_raw code) ^ inner_generate child in
             rule :: rules
         else rules
       ) [] list
