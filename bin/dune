@@ -1,0 +1,5 @@
+(executable
+ (name main)
+ (public_name main)
+ (flags (:standard -safe-string))
+ (libraries migemocaml unix))

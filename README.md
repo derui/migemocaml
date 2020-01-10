@@ -1,5 +1,5 @@
 # Migemo for OCaml #
-This library is an implementation of [http://0xcc.net/migemo/](Migemo) for OCaml use.
+This library is an implementation of [http://0xcc.net/migemo/](Ruby/Migemo) for using in OCaml.
 
 
 ## Motivation ##
@@ -12,21 +12,24 @@ This library motivations are:
 - More simple implementation
   - This library drops support for some encodings such as **euc-jp** and **cp932** .
 
-Thanks to original implementation [http://0xcc.net/migemo/](Migemo), [https://www.kaoriya.net/software/cmigemo/](C/Migemo) as very helpful implementation reference.
+Thanks to original implementation [http://0xcc.net/migemo/](Ruby/Migemo), [https://www.kaoriya.net/software/cmigemo/](C/Migemo) as very helpful implementation reference.
 
 # Development #
 
 ## Build ##
 
 ```shell
-$ jbuilder build
+$ dune build
 ```
 
 ## Test ##
 
 ```shell
-$ jbuilder runtest
+$ dune runtest
 ```
+
+# TODO #
+- write how to make Migemo dictionary
 
 # License #
 
@@ -34,5 +37,5 @@ MIT License
 
 # Reference #
 
-[http://0xcc.net/migemo/](Migemo) : original implementation
+[http://0xcc.net/migemo/](Ruby/Migemo) : original implementation
 [https://www.kaoriya.net/software/cmigemo/](C/Migemo) : C porting

@@ -19,3 +19,6 @@ depends: [
   "oUnit" {with-test}
 ]
 available: ["ocaml" >= "4.05.0"]
+description: """
+Pure OCaml implementation of migemo
+"""
