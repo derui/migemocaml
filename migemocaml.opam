@@ -15,8 +15,9 @@ build: [
 ]
 depends: [
   "dune" { >= "2.0.0"}
+  "logs" { < "0.8.0" & >= "0.7.0"}
   "menhir" {build}
-  "oUnit" {with-test}
+  "alcotest" {with-test & < "2.0.0"}
 ]
 available: ["ocaml" >= "4.05.0"]
 description: """
