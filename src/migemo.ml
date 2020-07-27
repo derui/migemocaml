@@ -19,6 +19,20 @@ let make ?romaji_to_hira ?hira_to_kata ?han_to_zen ?spec ~dict () =
     spec = Option.value ~default:Regexp_spec.((module Default : S)) spec;
   }
 
+let make_from_dir ?spec ~base_dir () =
+  let migemo_dict = "migemo-dict"
+  and hira_to_kata = "hira2kata.dat"
+  and roma_to_hira = "roma2hira.dat"
+  and han_to_zen = "han2zen.dat" in
+  let dict_file = Filename.concat base_dir migemo_dict in
+  match Dict_tree.load_dict dict_file with
+  | None             -> None
+  | Some migemo_dict ->
+      let hira_to_kata = Dict_tree.load_conv @@ Filename.concat base_dir hira_to_kata
+      and romaji_to_hira = Dict_tree.load_conv @@ Filename.concat base_dir roma_to_hira
+      and han_to_zen = Dict_tree.load_conv @@ Filename.concat base_dir han_to_zen in
+      make ~dict:migemo_dict ?hira_to_kata ?romaji_to_hira ?han_to_zen ?spec () |> Option.some
+
 (** split query to segments. Normally upper case alphabets is splitter of segment.
 
     example: query="abcde" -> ["abcde"] query="Abcde" -> ["abcde"] query="AbCde" -> ["ab";"cde"] query="ABcde" ->
