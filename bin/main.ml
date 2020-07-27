@@ -6,14 +6,6 @@ let use_emacs = ref false
 
 let quiet = ref false
 
-let migemo_dict = "migemo-dict"
-
-let hira_to_kata = "hira2kata.dat"
-
-let roma_to_hira = "roma2hira.dat"
-
-let han_to_zen = "han2zen.dat"
-
 let set_signal_handler () = Sys.set_signal Sys.sigint (Sys.Signal_handle (fun _ -> exit 0))
 
 let rec main_loop ~quiet migemo =
@@ -36,23 +28,11 @@ let () =
   in
   Arg.parse specs ignore "";
 
-  let dict_file = Filename.concat !dict_dir migemo_dict in
   let spec = if !use_emacs then Some M.Regexp_spec.((module Emacs : S)) else None in
-  match M.Dict_tree.load_dict dict_file with
-  | None             ->
-      Logs.err (fun m -> m "Dict can not load: %s\n" dict_file);
+  match M.Migemo.make_from_dir ?spec ~base_dir:!dict_dir () with
+  | None        ->
+      Logs.err (fun m -> m "Can not load dictionary from: %s\n" !dict_dir);
       exit 1
-  | Some migemo_dict ->
-      let hira_to_kata =
-        Logs.info (fun m -> m "Loading %s\n" hira_to_kata);
-        M.Dict_tree.load_conv @@ Filename.concat !dict_dir hira_to_kata
-      and romaji_to_hira =
-        Logs.info (fun m -> m "Loading %s\n" roma_to_hira);
-        M.Dict_tree.load_conv @@ Filename.concat !dict_dir roma_to_hira
-      and han_to_zen =
-        Logs.info (fun m -> m "Loading %s\n" han_to_zen);
-        M.Dict_tree.load_conv @@ Filename.concat !dict_dir han_to_zen
-      in
-      let migemo = M.Migemo.make ~dict:migemo_dict ?hira_to_kata ?romaji_to_hira ?han_to_zen ?spec () in
+  | Some migemo ->
       set_signal_handler ();
       main_loop ~quiet:!quiet migemo

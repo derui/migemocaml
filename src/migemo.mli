@@ -13,5 +13,8 @@ val make :
   t
 (** Make migemo object with dictionary and conversions *)
 
+val make_from_dir : ?spec:(module Regexp_spec.S) -> base_dir:string -> unit -> t option
+(** Make migemo object that dictionary and conversions are loaded from [base_dir]directory *)
+
 val query : query:string -> t -> string
 (** Query the [query] to migemo [t] object and get regular expression. *)
