@@ -36,3 +36,16 @@ module Emacs : S = struct
 
   let operator_or = "\\|"
 end
+
+(** The spec for OCaml's Str integration *)
+module OCaml_str : S = struct
+  let operator_select_in = "["
+
+  let operator_select_out = "]"
+
+  let operator_group_in = "\\("
+
+  let operator_group_out = "\\)"
+
+  let operator_or = "\\|"
+end
