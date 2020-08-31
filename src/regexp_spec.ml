@@ -1,3 +1,8 @@
+(** Regexp_spec define module interface and some modules to generate regexp from {!Migemo} module.
+
+    If you want to use [Migemocaml] in your application with {!Str} module, you will need {!OCaml_str} module. Create
+    new module from {!S} if you want to generate regexp for unsupported format in Migemocaml. *)
+
 (** Spec for regexp that is generated from this module *)
 module type S = sig
   val operator_select_in : string
