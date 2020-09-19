@@ -39,27 +39,27 @@ let rec equal v1 v2 =
   | Node (v1, l1, r1), Node (v2, l2, r2) -> Attr.equal v1 v2 && equal l1 l2 && equal r1 r2
 
 (** Make a tree from list of dict *)
+
 let make_tree list =
-  let rec construct_tree tree buf words =
-    if String.length buf = 0 then tree
+  let rec construct_tree tree buf index words =
+    if String.length buf <= index then tree
     else
-      let ch = buf.[0] in
+      let ch = buf.[index] in
       match tree with
       | Nil                  ->
           let tree = Node ({ Attr.char = ch; word_list = [] }, Nil, Nil) in
-          construct_tree tree buf words
+          construct_tree tree buf index words
       | Node (v, sib, child) ->
           if v.Attr.char = ch then
-            if String.length buf = 1 then Node ({ v with Attr.word_list = v.word_list @ words }, sib, child)
+            if String.length buf = succ index then Node ({ v with Attr.word_list = v.word_list @ words }, sib, child)
             else
-              let _, rest = Util.take ~size:1 buf in
-              let child = construct_tree child rest words in
+              let child = construct_tree child buf (succ index) words in
               Node (v, sib, child)
           else
-            let sib = construct_tree sib buf words in
+            let sib = construct_tree sib buf index words in
             Node (v, sib, child)
   in
-  List.fold_left (fun tree (buf, words) -> construct_tree tree buf words) Nil list
+  List.fold_left (fun tree (buf, words) -> construct_tree tree buf 0 words) Nil list
 
 (** Send [query] to find longest matching content in [tree]. *)
 let query ~query tree =

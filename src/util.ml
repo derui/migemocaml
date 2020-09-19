@@ -2,9 +2,10 @@
 
 (** Take first string of [size] from [str] *)
 let take ?(size = 1) str =
-  if String.length str = 0 then ("", "")
-  else if String.length str <= size then (str, "")
-  else (String.sub str 0 size, String.(sub str size @@ (length str - size)))
+  let first = Astring.String.take ~min:0 ~max:size str and second = Astring.String.drop ~min:0 ~max:size str in
+  (first, second)
+
+let string_to_list str = String.to_seq str |> List.of_seq
 
 let uppercase_alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 

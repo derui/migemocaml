@@ -10,4 +10,5 @@
 (library
  (name migemocaml)
  (public_name migemocaml)
- (flags (:standard -safe-string)))
+ (flags (:standard -safe-string))
+ (libraries astring))
