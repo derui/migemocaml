@@ -1,14 +1,5 @@
-(menhir
- (modules migemo_dict_parser))
-(menhir
- (modules migemo_conv_parser))
-(ocamllex
- (modules migemo_dict_lexer))
-(ocamllex
- (modules migemo_conv_lexer))
-
 (library
  (name migemocaml)
  (public_name migemocaml)
  (flags (:standard -safe-string))
- (libraries astring))
+ (libraries migemocaml.private))

@@ -1,5 +1,5 @@
-module Parser = Migemocaml.Migemo_dict_parser
-module Lexer = Migemocaml.Migemo_dict_lexer
+module Parser = Migemocaml_private.Migemo_dict_parser
+module Lexer = Migemocaml_private.Migemo_dict_lexer
 
 let suite =
   let dict_t = Alcotest.(list @@ pair string @@ list string) in

@@ -1,5 +1,5 @@
-open Migemocaml.Migemo
-module D = Migemocaml.Dict_tree
+open Migemocaml_private.Migemo
+module D = Migemocaml_private.Dict_tree
 
 let suite =
   [

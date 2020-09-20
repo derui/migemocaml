@@ -1,4 +1,4 @@
-module T = Migemocaml.Dict_tree
+module T = Migemocaml_private.Dict_tree
 
 let dict_t = Alcotest.testable T.pp T.equal
 

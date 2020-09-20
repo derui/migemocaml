@@ -1,5 +1,6 @@
 (executable
  (name main)
  (public_name migemocaml)
+ (package migemocaml)
  (flags (:standard -safe-string))
  (libraries migemocaml unix logs))
