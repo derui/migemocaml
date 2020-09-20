@@ -1,4 +1,4 @@
-module C = Migemocaml.Charset.Utf8
+module C = Migemocaml_private.Charset.Utf8
 
 let suite =
   let char_t = Alcotest.(option @@ pair int64 int) in

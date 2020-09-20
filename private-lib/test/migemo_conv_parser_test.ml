@@ -1,5 +1,5 @@
-module Parser = Migemocaml.Migemo_conv_parser
-module Lexer = Migemocaml.Migemo_conv_lexer
+module Parser = Migemocaml_private.Migemo_conv_parser
+module Lexer = Migemocaml_private.Migemo_conv_lexer
 
 let with_in_channel file f =
   let ic = open_in_bin file in

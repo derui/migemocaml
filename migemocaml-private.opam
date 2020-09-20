@@ -7,7 +7,7 @@ license: "MIT"
 homepage: "https://github.com/derui/migemocaml"
 bug-reports: "https://github.com/derui/migemocaml"
 dev-repo: "git+https://github.com/derui/migemocaml"
-synopsis: "Migemo implementation for OCamhl"
+synopsis: "Private library for Migemocaml"
 tags: []
 build: [
   ["dune" "build" "-p" name "-j" jobs]
@@ -16,9 +16,13 @@ build: [
 depends: [
   "dune" { >= "2.0.0"}
   "logs" { < "0.8.0" & >= "0.7.0"}
-  "migemocaml-private" { = "0.4.0" }
+  "menhir" {build}
+  "alcotest" {with-test & < "2.0.0"}
+  "astring" { < "0.9.0" & >= "0.8.0" }
 ]
 available: ["ocaml" >= "4.05.0"]
 description: """
-Pure OCaml implementation of migemo
+!!DO NOT USE THIS LIBRARY!!
+
+Private library for Migemocaml.
 """

@@ -1,7 +1,7 @@
-open Migemocaml.Regexp_gen
+open Migemocaml_private.Regexp_gen
 
 let suite =
-  let module S = Migemocaml.Regexp_spec.Default in
+  let module S = Migemocaml_private.Regexp_spec.Default in
   [
     ( "should return empty tree if word is empty",
       `Quick,

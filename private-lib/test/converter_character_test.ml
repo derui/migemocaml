@@ -1,5 +1,5 @@
-module T = Migemocaml.Dict_tree
-module R = Migemocaml.Converter_romaji
+module T = Migemocaml_private.Dict_tree
+module R = Migemocaml_private.Converter_romaji
 
 let suite =
   [
