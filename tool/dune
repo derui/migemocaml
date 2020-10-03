@@ -1,0 +1,6 @@
+(executable
+ (name skk_to_migemo)
+ (public_name skk_to_migemo)
+ (package migemocaml)
+ (flags (:standard -safe-string))
+ (libraries unix camomile))
