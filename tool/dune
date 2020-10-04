@@ -1,6 +1,23 @@
 (executable
  (name skk_to_migemo)
  (public_name skk_to_migemo)
+ (modules skk_to_migemo)
  (package migemocaml)
  (flags (:standard -safe-string))
- (libraries unix camomile))
+ (libraries camomile))
+
+(executable
+ (name optimize_dict)
+ (public_name optimize_dict)
+ (modules optimize_dict)
+ (package migemocaml)
+ (flags (:standard -safe-string))
+ (libraries camomile))
+
+(executable
+ (name sjis_to_utf8)
+ (public_name sjis_to_utf8)
+ (modules sjis_to_utf8)
+ (package migemocaml)
+ (flags (:standard -safe-string))
+ (libraries camomile))

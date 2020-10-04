@@ -11,11 +11,13 @@ let eucjp_to_utf8 line =
 let read_line filename f =
   let in_chan = open_in filename in
 
-  let rec read_line' chan () = try input_line chan |> f |> read_line' chan with End_of_file -> () in
-  read_line' in_chan ();
+  let rec read_line' chan () = input_line chan |> f |> read_line' chan in
+  let () = try read_line' in_chan () with End_of_file -> () in
   close_in in_chan
 
-let regexp_split_key_value = ReIntf.regexp "^([^ ]+) +(.*)$" |> URe.compile
+let regexp_comment = ReIntf.regexp "^;" |> URe.compile
+
+let regexp_split_key_value = ReIntf.regexp "^\\([^ ]+\\) +\\(.*\\)$" |> URe.compile
 
 let regexp_special_key_head = ReIntf.regexp "^[<>?]" |> URe.compile
 
@@ -25,14 +27,15 @@ let regexp_okuri = ReIntf.regexp "[a-z]$" |> URe.compile
 
 let regexp_not_okuri = ReIntf.regexp "^[ -~]+$" |> URe.compile
 
-let regexp_remove_lisp_expression = ReIntf.regexp "^\\([a-zA-Z].*\\)$" |> URe.compile
+let regexp_remove_lisp_expression = ReIntf.regexp "^([a-zA-Z].*)$" |> URe.compile
 
 let regexp_number_expansion = ReIntf.regexp "#" |> URe.compile
 
-let regexp_annotation = ReIntf.regexp "^([^;]+?);.*$" |> URe.compile
+let regexp_annotation = ReIntf.regexp "^\\([^;]+?\\);.*$" |> URe.compile
 
-(* monad operator for Option *)
 let ( >>= ) a f = match a with None -> None | Some v -> f v
+
+let remove_comment line = if URe.string_match regexp_comment line 0 then None else Some line
 
 let extract_groups groups =
   let groups = Array.sub groups 1 (Array.length groups - 1) in
@@ -62,7 +65,7 @@ let split_values (key, value) =
 
 let remove_lisp_expression pair =
   let values = snd pair in
-  let values = List.filter (fun v -> URe.string_match regexp_remove_lisp_expression v 0) values in
+  let values = List.filter (fun v -> not @@ URe.string_match regexp_remove_lisp_expression v 0) values in
   Some (fst pair, values)
 
 let remove_number_expansion (key, values) =
@@ -93,9 +96,10 @@ let print_dict_line line =
   let line = String.trim line |> eucjp_to_utf8 in
 
   let key_values =
-    URe.regexp_match regexp_split_key_value line 0
+    remove_comment line >>= fun v ->
+    URe.regexp_match regexp_split_key_value v 0
     >>= extract_groups >>= extract_key_value >>= remove_okuri >>= remove_value_slashes >>= split_values
-    >>= remove_lisp_expression >>= remove_number_expansion
+    >>= remove_lisp_expression >>= remove_number_expansion >>= remove_annotation
   in
   match key_values with
   | None               -> ()
