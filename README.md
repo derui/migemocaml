@@ -28,6 +28,15 @@ If you want to use `migemo.el` of Emacs, put above configuration to your init.el
 (setq migemo-dictionary "/usr/local/share/migemo/utf-8")
 ```
 
+## Make migemo dictionary ##
+If you have not installed cmigemo before, you must make dictionary for migemo. This repository includes tools to make it, so you type below command in top of this repository on terminal.
+
+```shell
+$ make dict
+```
+
+Result of above command creates `dict` directory and dictionary and dat files for UTF-8 encoding. You can use it with migemocaml `-d` option.
+
 # Development #
 
 ## Build ##
@@ -41,9 +50,6 @@ $ dune build
 ```shell
 $ dune runtest
 ```
-
-# TODO #
-- write how to make Migemo dictionary
 
 # License #
 
