@@ -1,3 +1,5 @@
+(* original written by MURAOKA Taro <koron@tka.att.ne.jp> *)
+(* original implementation is https://github.com/koron/cmigemo/tools/skk2migemo.pl *)
 module C = CamomileLibraryDefault
 module URe = C.Camomile.URe.Make (C.Camomile.UTF8)
 module ReIntf = C.Camomile.UReStr
