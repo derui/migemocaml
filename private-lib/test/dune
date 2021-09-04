@@ -1,9 +1,4 @@
-(alias
- (name    runtest)
- (deps    migemocaml_test.exe)
- (action  (run %{deps})))
-
-(executable
+(test
  (name migemocaml_test)
  (flags (-safe-string))
  (libraries migemocaml.private alcotest))
