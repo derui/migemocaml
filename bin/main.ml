@@ -10,13 +10,16 @@ let set_signal_handler () = Sys.set_signal Sys.sigint (Sys.Signal_handle (fun _ 
 
 let rec main_loop ~quiet migemo =
   if not quiet then Printf.printf "Input query: " else ();
-  let query = read_line () in
-  let _start = Unix.gettimeofday () in
-  let regexp = M.Migemo.query ~query migemo in
-  let _end = Unix.gettimeofday () in
-  if not quiet then Printf.printf "Result of migemo: time %f :\n%s\n" (_end -. _start) regexp
-  else Printf.printf "%s\n" regexp;
-  main_loop ~quiet migemo
+  let query = try read_line () |> Option.some with _ -> None in
+  match query with
+  | None       -> ()
+  | Some query ->
+      let _start = Unix.gettimeofday () in
+      let regexp = M.Migemo.query ~query migemo in
+      let _end = Unix.gettimeofday () in
+      if not quiet then Printf.printf "Result of migemo: time %f :\n%s\n" (_end -. _start) regexp
+      else Printf.printf "%s\n" regexp;
+      main_loop ~quiet migemo
 
 let () =
   let specs =
