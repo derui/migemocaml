@@ -1,6 +1,6 @@
 
 opam-version: "2.0"
-version: "0.4.1"
+version: "0.4.2"
 maintainer: "derutakayu@gmail.com"
 authors: "derui"
 license: "MIT"
@@ -16,7 +16,7 @@ build: [
 depends: [
   "dune" { >= "2.0.0"}
   "logs" { < "0.8.0" & >= "0.7.0"}
-  "migemocaml-private" { = "0.4.1" }
+  "migemocaml-private" { = "0.4.2" }
 ]
 available: ["ocaml" >= "4.05.0"]
 description: """
