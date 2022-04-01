@@ -11,7 +11,7 @@
 %%
 
 dict:
-| words = word_mapping* EOF { List.filter (function
+| words = list(word_mapping); EOF { List.filter (function
                                       | None -> false
                                       | Some _ -> true) words
                                   |> List.map (function
@@ -31,6 +31,6 @@ wildcard:
 
 word_mapping:
 | word SEPARATOR word NEWLINE { Some ($1, [$3]) }
-| SHARP* NEWLINE {None}
-| SHARP SEPARATOR wildcard* NEWLINE {None}
+| list(SHARP) NEWLINE {None}
+| SHARP SEPARATOR list(wildcard) NEWLINE {None}
 | word SEPARATOR SHARP NEWLINE {Some ($1, ["#"])}

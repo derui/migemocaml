@@ -11,10 +11,10 @@
 %%
 
 dict:
-| word_mapping* EOF { $1 }
+| list(word_mapping) EOF { $1 }
 
 word_mapping:
-| WORD mapped_word+ { ($1, $2) }
+| WORD nonempty_list(mapped_word) { ($1, $2) }
 
 mapped_word:
 | SEPARATOR WORD { $2 }
