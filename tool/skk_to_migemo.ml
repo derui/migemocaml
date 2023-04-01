@@ -21,10 +21,6 @@ let regexp_comment = ReIntf.regexp "^;" |> URe.compile
 
 let regexp_split_key_value = ReIntf.regexp "^\\([^ ]+\\) +\\(.*\\)$" |> URe.compile
 
-let regexp_special_key_head = ReIntf.regexp "^[<>?]" |> URe.compile
-
-let regexp_special_key_last = ReIntf.regexp "[<>?]$" |> URe.compile
-
 let regexp_okuri = ReIntf.regexp "[a-z]$" |> URe.compile
 
 let regexp_not_okuri = ReIntf.regexp "^[ -~]+$" |> URe.compile
