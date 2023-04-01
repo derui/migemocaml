@@ -16,7 +16,7 @@ build: [
 depends: [
   "dune" { >= "2.0.0"}
   "logs" { < "0.8.0" & >= "0.7.0"}
-  "migemocaml-private" { = "0.4.2" }
+  "migemocaml-private" { = "0.4.3" }
 ]
 available: ["ocaml" >= "4.05.0"]
 description: """
