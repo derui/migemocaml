@@ -1,8 +1,7 @@
 (* original written by MURAOKA Taro <koron@tka.att.ne.jp> *)
 (* original implementation is https://github.com/koron/cmigemo/tools/optimize-dict.pl *)
-module C = CamomileLibraryDefault
-module URe = C.Camomile.URe.Make (C.Camomile.UTF8)
-module ReIntf = C.Camomile.UReStr
+module URe = Camomile.URe.Make (Camomile.UTF8)
+module ReIntf = Camomile.UReStr
 
 let read_line filename f =
   let in_chan = open_in filename in
@@ -35,7 +34,7 @@ let () =
     List.sort
       (fun a b ->
         let cmp_len = compare (String.length b) (String.length a) in
-        if cmp_len = 0 then C.Camomile.UTF8.compare a b else cmp_len)
+        if cmp_len = 0 then Camomile.UTF8.compare a b else cmp_len)
       !lines
   in
   let uniq_list words =

@@ -1,12 +1,11 @@
-module C = CamomileLibraryDefault
-module URe = C.Camomile.URe.Make (C.Camomile.UTF8)
-module ReIntf = C.Camomile.UReStr
+module URe = Camomile.URe.Make (Camomile.UTF8)
+module ReIntf = Camomile.UReStr
 
-let sjis_jp_enc = C.Camomile.CharEncoding.of_name "SJIS"
+let sjis_jp_enc = Camomile.CharEncoding.of_name "SJIS"
 
 let sjisjp_to_utf8 line =
-  let utf8_enc = C.Camomile.CharEncoding.utf8 in
-  C.Camomile.CharEncoding.(recode_string ~in_enc:sjis_jp_enc ~out_enc:utf8_enc line)
+  let utf8_enc = Camomile.CharEncoding.utf8 in
+  Camomile.CharEncoding.(recode_string ~in_enc:sjis_jp_enc ~out_enc:utf8_enc line)
 
 let read_line filename f =
   let in_chan = open_in filename in
